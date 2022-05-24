@@ -1,0 +1,163 @@
+package com.simibubi.create.foundation.gui;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+
+import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.InputConstants.Key;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.foundation.gui.widget.AbstractSimiWidget;
+import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
+
+import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+
+@Environment(EnvType.CLIENT)
+public abstract class AbstractSimiScreen extends Screen {
+
+	protected int windowWidth, windowHeight;
+	protected int windowXOffset, windowYOffset;
+	protected int guiLeft, guiTop;
+
+	protected AbstractSimiScreen(Component title) {
+		super(title);
+	}
+
+	protected AbstractSimiScreen() {
+		this(TextComponent.EMPTY);
+	}
+
+	/**
+	 * This method must be called before {@code super.init()}!
+	 */
+	protected void setWindowSize(int width, int height) {
+		windowWidth = width;
+		windowHeight = height;
+	}
+
+	/**
+	 * This method must be called before {@code super.init()}!
+	 */
+	protected void setWindowOffset(int xOffset, int yOffset) {
+		windowXOffset = xOffset;
+		windowYOffset = yOffset;
+	}
+
+	@Override
+	protected void init() {
+		guiLeft = (width - windowWidth) / 2;
+		guiTop = (height - windowHeight) / 2;
+		guiLeft += windowXOffset;
+		guiTop += windowYOffset;
+	}
+
+	@Override
+	public void tick() {
+		for (GuiEventListener listener : children()) {
+			if (listener instanceof TickableGuiEventListener tickable) {
+				tickable.tick();
+			}
+		}
+	}
+
+	@Override
+	public boolean isPauseScreen() {
+		return false;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <W extends GuiEventListener & Widget & NarratableEntry> void addRenderableWidgets(W... widgets) {
+		for (W widget : widgets) {
+			addRenderableWidget(widget);
+		}
+	}
+
+	protected <W extends GuiEventListener & Widget & NarratableEntry> void addRenderableWidgets(Collection<W> widgets) {
+		for (W widget : widgets) {
+			addRenderableWidget(widget);
+		}
+	}
+
+	protected void removeWidgets(GuiEventListener... widgets) {
+		for (GuiEventListener widget : widgets) {
+			removeWidget(widget);
+		}
+	}
+
+	protected void removeWidgets(Collection<? extends GuiEventListener> widgets) {
+		for (GuiEventListener widget : widgets) {
+			removeWidget(widget);
+		}
+	}
+
+	@Override
+	public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+		partialTicks = minecraft.getFrameTime();
+
+		ms.pushPose();
+
+		prepareFrame();
+
+		renderWindowBackground(ms, mouseX, mouseY, partialTicks);
+		renderWindow(ms, mouseX, mouseY, partialTicks);
+		super.render(ms, mouseX, mouseY, partialTicks);
+		renderWindowForeground(ms, mouseX, mouseY, partialTicks);
+
+		endFrame();
+
+		ms.popPose();
+	}
+
+	@Override
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		boolean keyPressed = super.keyPressed(keyCode, scanCode, modifiers);
+		if (keyPressed || getFocused() != null)
+			return keyPressed;
+
+		InputConstants.Key mouseKey = InputConstants.getKey(keyCode, scanCode);
+		Key invKeyCode = KeyBindingHelper.getKeyCode(this.minecraft.options.keyInventory);
+		if (Objects.equals(invKeyCode, mouseKey)) {
+			this.onClose();
+			return true;
+		}
+
+		return false;
+	}
+
+	protected void prepareFrame() {
+	}
+
+	protected void renderWindowBackground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+		renderBackground(ms);
+	}
+
+	protected abstract void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks);
+
+	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+		for (Widget widget : ((ScreenAccessor) this).port_lib$getRenderables()) {
+			if (widget instanceof AbstractSimiWidget simiWidget && simiWidget.isHoveredOrFocused()) {
+				List<Component> tooltip = simiWidget.getToolTip();
+				if (!tooltip.isEmpty())
+					renderComponentTooltip(ms, tooltip, mouseX, mouseY);
+			}
+		}
+	}
+
+	protected void endFrame() {
+	}
+
+	@Deprecated
+	protected void debugWindowArea(PoseStack matrixStack) {
+		fill(matrixStack, guiLeft + windowWidth, guiTop + windowHeight, guiLeft, guiTop, 0xD3D3D3D3);
+	}
+
+}

@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "id": "create",
+  "version": "${version}",
+
+  "name": "Create",
+  "description": "Technology that empowers the player.",
+  "authors": [
+    "Fabricators of Create",
+    "Creators of Create"
+  ],
+  "contact": {
+    "issues": "https://github.com/Fabricators-of-Create/Create/issues",
+    "sources": "https://github.com/Fabricators-of-Create/Create"
+  },
+
+  "license": "MIT",
+  "icon": "logo.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.simibubi.create.Create"
+    ],
+    "client": [
+      "com.simibubi.create.CreateClient"
+    ],
+    "fabric-datagen": [
+      "com.simibubi.create.CreateData"
+    ],
+    "rei": [
+      "com.simibubi.create.compat.rei.CreateREI"
+    ]
+  },
+
+  "mixins": [ "create.mixins.json" ],
+  "accessWidener": "create.accesswidener",
+
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": ">=${fabric_version}",
+    "minecraft": ">=${minecraft_version}",
+    "java": ">=${java_version}",
+    "registrate-fabric": ">=${registrate_version}",
+    "flywheel": ">=${flywheel_version}",
+    "porting_lib": ">=${port_lib_version}",
+    "forge_tags": ">=${forge_tags_version}",
+    "forgeconfigapiport": ">=${forge_config_api_port_version}",
+    "reach-entity-attributes": ">=${reach_entity_attributes_version}",
+    "fake-player-api": ">=${fake_player_api_version}",
+    "milk": ">=${milk_lib_version}"
+  },
+
+  "breaks": {
+    "optifabric": "*",
+    "colormatic": "<=3.1.1"
+  },
+
+  "custom": {
+    "/* you need to enable this (and move it out of 'custom') if you want to run datagen because yes */ provides": [
+      "com_electronwill_night-config_core",
+      "com_electronwill_night-config_toml"
+    ],
+    "loom:injected_interfaces": {
+      "net/minecraft/class_1688": ["com/simibubi/create/foundation/utility/fabric/AbstractMinecartExtensions"]
+    }
+  }
+}

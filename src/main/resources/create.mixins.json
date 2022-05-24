@@ -1,0 +1,29 @@
+{
+  "required": true,
+  "priority": 1100,
+  "package": "com.simibubi.create.foundation.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "create-refmap.json",
+  "mixins": [
+    "CustomItemUseEffectsMixin",
+    "accessor.AbstractProjectileDispenseBehaviorAccessor",
+    "accessor.DispenserBlockAccessor",
+    "accessor.FallingBlockEntityAccessor",
+    "accessor.LivingEntityAccessor",
+    "fabric.AbstractMinecartMixin",
+    "fabric.EntityMixin"
+  ],
+  "client": [
+    "DestroyProgressMixin",
+    "EntityContraptionInteractionMixin",
+    "FixNormalScalingMixin",
+    "HeavyBootsOnPlayerMixin",
+    "WindowResizeMixin",
+    "accessor.GameRendererAccessor",
+    "accessor.ParticleEngineAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
