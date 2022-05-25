@@ -137,6 +137,159 @@ public class AllFluids {
 					})
 					.register();
 
+
+	public static final FluidEntry<SimpleFlowableFluid.Flowing> ACID =
+			REGISTRATE.standardFluid("acid"/*, NoColorFluidAttributes::new*/)
+					.lang(f -> "fluid.create.acid", "Acid")
+					.tag(AllTags.forgeFluidTag("acid"))
+//					.attributes(b -> b.viscosity(1500)
+//							.density(1400))
+					.properties(p -> p.levelDecreasePerBlock(2)
+							.tickRate(25)
+							.flowSpeed(3)
+							.blastResistance(100f))
+					.renderHandler(() -> SimpleFluidRenderHandler::new)
+					.onRegisterAfter(Item.class, acid -> {
+						Fluid source = acid.getSource();
+						// transfer values
+						FluidStorage.combinedItemApiProvider(source.getBucket()).register(context ->
+								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(source), FluidConstants.BUCKET));
+						FluidStorage.combinedItemApiProvider(BUCKET).register(context ->
+								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(source.getBucket()), source, FluidConstants.BUCKET));
+					})
+					.register();
+
+	public static final FluidEntry<SimpleFlowableFluid.Flowing> SOULLAVA =
+			REGISTRATE.standardFluid("soullava"/*, NoColorFluidAttributes::new*/)
+					.lang(f -> "fluid.create.soullava", "Soullava")
+					.tag(AllTags.forgeFluidTag("soullava"))
+//					.attributes(b -> b.viscosity(1500)
+//							.density(1400))
+					.properties(p -> p.levelDecreasePerBlock(2)
+							.tickRate(25)
+							.flowSpeed(3)
+							.blastResistance(100f))
+					.renderHandler(() -> SimpleFluidRenderHandler::new)
+					.onRegisterAfter(Item.class, soullava -> {
+						Fluid source = soullava.getSource();
+						// transfer values
+						FluidStorage.combinedItemApiProvider(source.getBucket()).register(context ->
+								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(source), FluidConstants.BUCKET));
+						FluidStorage.combinedItemApiProvider(BUCKET).register(context ->
+								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(source.getBucket()), source, FluidConstants.BUCKET));
+					})
+					.register();
+
+
+	public static final FluidEntry<SimpleFlowableFluid.Flowing> ENDERLAVA =
+			REGISTRATE.standardFluid("enderlava"/*, NoColorFluidAttributes::new*/)
+					.lang(f -> "fluid.create.enderlava", "Enderlava")
+					.tag(AllTags.forgeFluidTag("enderlava"))
+//					.attributes(b -> b.viscosity(1500)
+//							.density(1400))
+					.properties(p -> p.levelDecreasePerBlock(2)
+							.tickRate(25)
+							.flowSpeed(3)
+							.blastResistance(100f))
+					.renderHandler(() -> SimpleFluidRenderHandler::new)
+					.onRegisterAfter(Item.class, enderlava -> {
+						Fluid source = enderlava.getSource();
+						// transfer values
+						FluidStorage.combinedItemApiProvider(source.getBucket()).register(context ->
+								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(source), FluidConstants.BUCKET));
+						FluidStorage.combinedItemApiProvider(BUCKET).register(context ->
+								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(source.getBucket()), source, FluidConstants.BUCKET));
+					})
+					.register();
+
+
+	public static final FluidEntry<SimpleFlowableFluid.Flowing> SOULWATER =
+			REGISTRATE.standardFluid("soulwater"/*, NoColorFluidAttributes::new*/)
+					.lang(f -> "fluid.create.soulwater", "Soulwater")
+					.tag(AllTags.forgeFluidTag("soulwater"))
+//					.attributes(b -> b.viscosity(1500)
+//							.density(1400))
+					.properties(p -> p.levelDecreasePerBlock(2)
+							.tickRate(25)
+							.flowSpeed(3)
+							.blastResistance(100f))
+					.renderHandler(() -> SimpleFluidRenderHandler::new)
+					.onRegisterAfter(Item.class, soulwater -> {
+						Fluid source = soulwater.getSource();
+						// transfer values
+						FluidStorage.combinedItemApiProvider(source.getBucket()).register(context ->
+								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(source), FluidConstants.BUCKET));
+						FluidStorage.combinedItemApiProvider(BUCKET).register(context ->
+								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(source.getBucket()), source, FluidConstants.BUCKET));
+					})
+					.register();
+
+
+	public static final FluidEntry<SimpleFlowableFluid.Flowing> SALTWATER =
+			REGISTRATE.standardFluid("saltwater"/*, NoColorFluidAttributes::new*/)
+					.lang(f -> "fluid.create.saltwater", "Saltwater")
+					.tag(AllTags.forgeFluidTag("saltwater"))
+//					.attributes(b -> b.viscosity(1500)
+//							.density(1400))
+					.properties(p -> p.levelDecreasePerBlock(2)
+							.tickRate(25)
+							.flowSpeed(3)
+							.blastResistance(100f))
+					.renderHandler(() -> SimpleFluidRenderHandler::new)
+					.onRegisterAfter(Item.class, saltwater -> {
+						Fluid source = saltwater.getSource();
+						// transfer values
+						FluidStorage.combinedItemApiProvider(source.getBucket()).register(context ->
+								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(source), FluidConstants.BUCKET));
+						FluidStorage.combinedItemApiProvider(BUCKET).register(context ->
+								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(source.getBucket()), source, FluidConstants.BUCKET));
+					})
+					.register();
+
+
+	public static final FluidEntry<SimpleFlowableFluid.Flowing> MUDWATER =
+			REGISTRATE.standardFluid("mudwater"/*, NoColorFluidAttributes::new*/)
+					.lang(f -> "fluid.create.mudwater", "Mudwater")
+					.tag(AllTags.forgeFluidTag("mudwater"))
+//					.attributes(b -> b.viscosity(1500)
+//							.density(1400))
+					.properties(p -> p.levelDecreasePerBlock(2)
+							.tickRate(25)
+							.flowSpeed(3)
+							.blastResistance(100f))
+					.renderHandler(() -> SimpleFluidRenderHandler::new)
+					.onRegisterAfter(Item.class, mudwater -> {
+						Fluid source = mudwater.getSource();
+						// transfer values
+						FluidStorage.combinedItemApiProvider(source.getBucket()).register(context ->
+								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(source), FluidConstants.BUCKET));
+						FluidStorage.combinedItemApiProvider(BUCKET).register(context ->
+								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(source.getBucket()), source, FluidConstants.BUCKET));
+					})
+					.register();
+
+	public static final FluidEntry<SimpleFlowableFluid.Flowing> ENDERWATER =
+			REGISTRATE.standardFluid("enderwater"/*, NoColorFluidAttributes::new*/)
+					.lang(f -> "fluid.create.enderwater", "Enderwater")
+					.tag(AllTags.forgeFluidTag("enderwater"))
+//					.attributes(b -> b.viscosity(1500)
+//							.density(1400))
+					.properties(p -> p.levelDecreasePerBlock(2)
+							.tickRate(25)
+							.flowSpeed(3)
+							.blastResistance(100f))
+					.renderHandler(() -> SimpleFluidRenderHandler::new)
+					.onRegisterAfter(Item.class, enderwater -> {
+						Fluid source = enderwater.getSource();
+						// transfer values
+						FluidStorage.combinedItemApiProvider(source.getBucket()).register(context ->
+								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(source), FluidConstants.BUCKET));
+						FluidStorage.combinedItemApiProvider(BUCKET).register(context ->
+								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(source.getBucket()), source, FluidConstants.BUCKET));
+					})
+					.register();
+
+
 	// Load this class
 
 	public static void register() {}

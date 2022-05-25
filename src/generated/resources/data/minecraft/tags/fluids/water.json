@@ -4,6 +4,14 @@
     "create:flowing_honey",
     "create:honey",
     "create:flowing_chocolate",
-    "create:chocolate"
+    "create:chocolate",
+    "create:flowing_enderwater",
+    "create:enderwater",
+    "create:flowing_soulwater",
+    "create:soulwater",
+    "create:flowing_mudwater",
+    "create:mudwater",
+    "create:flowing_saltwater",
+    "create:saltwater"
   ]
 }
