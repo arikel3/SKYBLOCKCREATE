@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:lava",
+    "minecraft:flowing_lava",
+    "create:flowing_acid",
+    "create:acid",
+    "create:flowing_soullava",
+    "create:soullava",
+    "create:flowing_enderlava",
+    "create:enderlava"
+  ]
+}
