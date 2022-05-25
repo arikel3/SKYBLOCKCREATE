@@ -9,9 +9,15 @@ import java.util.Optional;
 
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.content.contraptions.components.fan.BlazingRecipe;
+import com.simibubi.create.content.contraptions.components.fan.CorruptingRecipe;
+import com.simibubi.create.content.contraptions.components.fan.FreezingRecipe;
 import com.simibubi.create.content.contraptions.components.fan.HauntingRecipe;
+import com.simibubi.create.content.contraptions.components.fan.SaltingRecipe;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
+import com.simibubi.create.content.contraptions.components.fan.TeleportingRecipe;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.LitBlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
@@ -71,6 +77,13 @@ public class InWorldProcessing {
 	private static final SplashingWrapper SPLASHING_WRAPPER = new SplashingWrapper();
 	private static final HauntingWrapper HAUNTING_WRAPPER = new HauntingWrapper();
 
+	private static final BlazingWrapper BLAZING_WRAPPER = new BlazingWrapper();
+	private static final FreezingWrapper FREEZING_WRAPPER = new FreezingWrapper();
+	private static final SaltingWrapper SALTING_WRAPPER = new SaltingWrapper();
+	private static final CorruptingWrapper CORRUPTING_WRAPPER = new CorruptingWrapper();
+	private static final TeleportingWrapper TELEPORTING_WRAPPER = new TeleportingWrapper();
+
+
 	public static boolean canProcess(ItemEntity entity, Type type) {
 		if (EntityHelper.getExtraCustomData(entity)
 			.contains("CreateData")) {
@@ -101,6 +114,38 @@ public class InWorldProcessing {
 		Optional<HauntingRecipe> recipe = AllRecipeTypes.HAUNTING.find(HAUNTING_WRAPPER, world);
 		return recipe.isPresent();
 	}
+
+	public static boolean isTeleportable(ItemStack stack, Level world) {
+		TELEPORTING_WRAPPER.setItem(0, stack);
+		Optional<TeleportingRecipe> recipe = AllRecipeTypes.TELEPORTING.find(TELEPORTING_WRAPPER, world);
+		return recipe.isPresent();
+	}
+
+	public static boolean isCorruptable(ItemStack stack, Level world) {
+		CORRUPTING_WRAPPER.setItem(0, stack);
+		Optional<CorruptingRecipe> recipe = AllRecipeTypes.CORRUPTING.find(CORRUPTING_WRAPPER, world);
+		return recipe.isPresent();
+	}
+
+	public static boolean isSaltable(ItemStack stack, Level world) {
+		SALTING_WRAPPER.setItem(0, stack);
+		Optional<SaltingRecipe> recipe = AllRecipeTypes.SALTING.find(SALTING_WRAPPER, world);
+		return recipe.isPresent();
+	}
+
+	public static boolean isFreezable(ItemStack stack, Level world) {
+		FREEZING_WRAPPER.setItem(0, stack);
+		Optional<FreezingRecipe> recipe = AllRecipeTypes.FREEZING.find(FREEZING_WRAPPER, world);
+		return recipe.isPresent();
+	}
+
+	public static boolean isBlazable(ItemStack stack, Level world) {
+		BLAZING_WRAPPER.setItem(0, stack);
+		Optional<BlazingRecipe> recipe = AllRecipeTypes.BLAZING.find(BLAZING_WRAPPER, world);
+		return recipe.isPresent();
+	}
+
+
 
 	public static void applyProcessing(ItemEntity entity, Type type) {
 		if (decrementProcessingTime(entity, type) != 0)
@@ -166,6 +211,45 @@ public class InWorldProcessing {
 			return null;
 		}
 
+		if (type == Type.TELEPORTING) {
+			TELEPORTING_WRAPPER.setItem(0, stack);
+			Optional<TeleportingRecipe> recipe = AllRecipeTypes.TELEPORTING.find(TELEPORTING_WRAPPER, world);
+			if (recipe.isPresent())
+				return applyRecipeOn(stack, recipe.get());
+			return null;
+		}
+
+		if (type == Type.CORRUPTING) {
+			HAUNTING_WRAPPER.setItem(0, stack);
+			Optional<CorruptingRecipe> recipe = AllRecipeTypes.CORRUPTING.find(CORRUPTING_WRAPPER, world);
+			if (recipe.isPresent())
+				return applyRecipeOn(stack, recipe.get());
+			return null;
+		}
+
+		if (type == Type.SALTING) {
+			SALTING_WRAPPER.setItem(0, stack);
+			Optional<SaltingRecipe> recipe = AllRecipeTypes.SALTING.find(SALTING_WRAPPER, world);
+			if (recipe.isPresent())
+				return applyRecipeOn(stack, recipe.get());
+			return null;
+		}
+
+		if (type == Type.BLAZING) {
+			BLAZING_WRAPPER.setItem(0, stack);
+			Optional<BlazingRecipe> recipe = AllRecipeTypes.BLAZING.find(BLAZING_WRAPPER, world);
+			if (recipe.isPresent())
+				return applyRecipeOn(stack, recipe.get());
+			return null;
+		}
+
+		if (type == Type.FREEZING) {
+			FREEZING_WRAPPER.setItem(0, stack);
+			Optional<FreezingRecipe> recipe = AllRecipeTypes.FREEZING.find(FREEZING_WRAPPER, world);
+			if (recipe.isPresent())
+				return applyRecipeOn(stack, recipe.get());
+			return null;
+		}
 		RECIPE_WRAPPER.setItem(0, stack);
 		Optional<SmokingRecipe> smokingRecipe = world.getRecipeManager()
 			.getRecipeFor(RecipeType.SMOKING, RECIPE_WRAPPER, world);
@@ -403,6 +487,361 @@ public class InWorldProcessing {
 				return isHauntable(stack, level);
 			}
 		},
+		TELEPORTING {
+			@Override
+			public void spawnParticlesForProcessing(Level level, Vec3 pos) {
+				if (level.random.nextInt(8) != 0)
+					return;
+				pos = pos.add(VecHelper.offsetRandomly(Vec3.ZERO, level.random, 1)
+						.multiply(1, 0.05f, 1)
+						.normalize()
+						.scale(0.15f));
+				level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, pos.x, pos.y + .45f, pos.z, 0, 0, 0);
+				if (level.random.nextInt(2) == 0)
+					level.addParticle(ParticleTypes.SMOKE, pos.x, pos.y + .25f, pos.z, 0, 0, 0);
+			}
+
+			@Override
+			public void affectEntity(Entity entity, Level level) {
+				if (level.isClientSide) {
+					if (entity instanceof Horse) {
+						Vec3 p = entity.getPosition(0);
+						Vec3 v = p.add(0, 0.5f, 0)
+								.add(VecHelper.offsetRandomly(Vec3.ZERO, level.random, 1)
+										.multiply(1, 0.2f, 1)
+										.normalize()
+										.scale(1f));
+						level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, v.x, v.y, v.z, 0, 0.1f, 0);
+						if (level.random.nextInt(3) == 0)
+							level.addParticle(ParticleTypes.LARGE_SMOKE, p.x, p.y + .5f, p.z,
+									(level.random.nextFloat() - .5f) * .5f, 0.1f, (level.random.nextFloat() - .5f) * .5f);
+					}
+					return;
+				}
+
+				if (entity instanceof LivingEntity livingEntity) {
+					livingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30, 0, false, false));
+					livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 1, false, false));
+				}
+				if (entity instanceof Horse horse) {
+					int progress = EntityHelper.getExtraCustomData(horse)
+							.getInt("CreateTeleporting");
+					if (progress < 100) {
+						if (progress % 10 == 0) {
+							level.playSound(null, entity.blockPosition(), SoundEvents.SOUL_ESCAPE, SoundSource.NEUTRAL,
+									1f, 1.5f * progress / 100f);
+						}
+						EntityHelper.getExtraCustomData(horse)
+								.putInt("CreateTeleporting", progress + 1);
+						return;
+					}
+
+					level.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXTINGUISH_FIRE,
+							SoundSource.NEUTRAL, 1.25f, 0.65f);
+
+					SkeletonHorse skeletonHorse = EntityType.SKELETON_HORSE.create(level);
+					CompoundTag serializeNBT = horse.saveWithoutId(new CompoundTag());
+					serializeNBT.remove("UUID");
+					if (!horse.getArmor()
+							.isEmpty())
+						horse.spawnAtLocation(horse.getArmor());
+
+					NBTSerializer.deserializeNBT(skeletonHorse, serializeNBT);
+					skeletonHorse.setPos(horse.getPosition(0));
+					level.addFreshEntity(skeletonHorse);
+					horse.discard();
+				}
+			}
+
+			@Override
+			public boolean canProcess(ItemStack stack, Level level) {
+				return isHauntable(stack, level);
+			}
+		},
+		BLAZING {
+			@Override
+			public void spawnParticlesForProcessing(Level level, Vec3 pos) {
+				if (level.random.nextInt(8) != 0)
+					return;
+				pos = pos.add(VecHelper.offsetRandomly(Vec3.ZERO, level.random, 1)
+						.multiply(1, 0.05f, 1)
+						.normalize()
+						.scale(0.15f));
+				level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, pos.x, pos.y + .45f, pos.z, 0, 0, 0);
+				if (level.random.nextInt(2) == 0)
+					level.addParticle(ParticleTypes.SMOKE, pos.x, pos.y + .25f, pos.z, 0, 0, 0);
+			}
+
+			@Override
+			public void affectEntity(Entity entity, Level level) {
+				if (level.isClientSide) {
+					if (entity instanceof Horse) {
+						Vec3 p = entity.getPosition(0);
+						Vec3 v = p.add(0, 0.5f, 0)
+								.add(VecHelper.offsetRandomly(Vec3.ZERO, level.random, 1)
+										.multiply(1, 0.2f, 1)
+										.normalize()
+										.scale(1f));
+						level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, v.x, v.y, v.z, 0, 0.1f, 0);
+						if (level.random.nextInt(3) == 0)
+							level.addParticle(ParticleTypes.LARGE_SMOKE, p.x, p.y + .5f, p.z,
+									(level.random.nextFloat() - .5f) * .5f, 0.1f, (level.random.nextFloat() - .5f) * .5f);
+					}
+					return;
+				}
+
+				if (entity instanceof LivingEntity livingEntity) {
+					livingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30, 0, false, false));
+					livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 1, false, false));
+				}
+				if (entity instanceof Horse horse) {
+					int progress = EntityHelper.getExtraCustomData(horse)
+							.getInt("CreateBlazing");
+					if (progress < 100) {
+						if (progress % 10 == 0) {
+							level.playSound(null, entity.blockPosition(), SoundEvents.SOUL_ESCAPE, SoundSource.NEUTRAL,
+									1f, 1.5f * progress / 100f);
+						}
+						EntityHelper.getExtraCustomData(horse)
+								.putInt("CreateBlazing", progress + 1);
+						return;
+					}
+
+					level.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXTINGUISH_FIRE,
+							SoundSource.NEUTRAL, 1.25f, 0.65f);
+
+					SkeletonHorse skeletonHorse = EntityType.SKELETON_HORSE.create(level);
+					CompoundTag serializeNBT = horse.saveWithoutId(new CompoundTag());
+					serializeNBT.remove("UUID");
+					if (!horse.getArmor()
+							.isEmpty())
+						horse.spawnAtLocation(horse.getArmor());
+
+					NBTSerializer.deserializeNBT(skeletonHorse, serializeNBT);
+					skeletonHorse.setPos(horse.getPosition(0));
+					level.addFreshEntity(skeletonHorse);
+					horse.discard();
+				}
+			}
+
+			@Override
+			public boolean canProcess(ItemStack stack, Level level) {
+				return isHauntable(stack, level);
+			}
+		},
+		FREEZING {
+			@Override
+			public void spawnParticlesForProcessing(Level level, Vec3 pos) {
+				if (level.random.nextInt(8) != 0)
+					return;
+				pos = pos.add(VecHelper.offsetRandomly(Vec3.ZERO, level.random, 1)
+						.multiply(1, 0.05f, 1)
+						.normalize()
+						.scale(0.15f));
+				level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, pos.x, pos.y + .45f, pos.z, 0, 0, 0);
+				if (level.random.nextInt(2) == 0)
+					level.addParticle(ParticleTypes.SMOKE, pos.x, pos.y + .25f, pos.z, 0, 0, 0);
+			}
+
+			@Override
+			public void affectEntity(Entity entity, Level level) {
+				if (level.isClientSide) {
+					if (entity instanceof Horse) {
+						Vec3 p = entity.getPosition(0);
+						Vec3 v = p.add(0, 0.5f, 0)
+								.add(VecHelper.offsetRandomly(Vec3.ZERO, level.random, 1)
+										.multiply(1, 0.2f, 1)
+										.normalize()
+										.scale(1f));
+						level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, v.x, v.y, v.z, 0, 0.1f, 0);
+						if (level.random.nextInt(3) == 0)
+							level.addParticle(ParticleTypes.LARGE_SMOKE, p.x, p.y + .5f, p.z,
+									(level.random.nextFloat() - .5f) * .5f, 0.1f, (level.random.nextFloat() - .5f) * .5f);
+					}
+					return;
+				}
+
+				if (entity instanceof LivingEntity livingEntity) {
+					livingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30, 0, false, false));
+					livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 1, false, false));
+				}
+				if (entity instanceof Horse horse) {
+					int progress = EntityHelper.getExtraCustomData(horse)
+							.getInt("CreateFreezing");
+					if (progress < 100) {
+						if (progress % 10 == 0) {
+							level.playSound(null, entity.blockPosition(), SoundEvents.SOUL_ESCAPE, SoundSource.NEUTRAL,
+									1f, 1.5f * progress / 100f);
+						}
+						EntityHelper.getExtraCustomData(horse)
+								.putInt("CreateFreezing", progress + 1);
+						return;
+					}
+
+					level.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXTINGUISH_FIRE,
+							SoundSource.NEUTRAL, 1.25f, 0.65f);
+
+					SkeletonHorse skeletonHorse = EntityType.SKELETON_HORSE.create(level);
+					CompoundTag serializeNBT = horse.saveWithoutId(new CompoundTag());
+					serializeNBT.remove("UUID");
+					if (!horse.getArmor()
+							.isEmpty())
+						horse.spawnAtLocation(horse.getArmor());
+
+					NBTSerializer.deserializeNBT(skeletonHorse, serializeNBT);
+					skeletonHorse.setPos(horse.getPosition(0));
+					level.addFreshEntity(skeletonHorse);
+					horse.discard();
+				}
+			}
+
+			@Override
+			public boolean canProcess(ItemStack stack, Level level) {
+				return isHauntable(stack, level);
+			}
+		},
+		CORRUPTING {
+			@Override
+			public void spawnParticlesForProcessing(Level level, Vec3 pos) {
+				if (level.random.nextInt(8) != 0)
+					return;
+				pos = pos.add(VecHelper.offsetRandomly(Vec3.ZERO, level.random, 1)
+						.multiply(1, 0.05f, 1)
+						.normalize()
+						.scale(0.15f));
+				level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, pos.x, pos.y + .45f, pos.z, 0, 0, 0);
+				if (level.random.nextInt(2) == 0)
+					level.addParticle(ParticleTypes.SMOKE, pos.x, pos.y + .25f, pos.z, 0, 0, 0);
+			}
+
+			@Override
+			public void affectEntity(Entity entity, Level level) {
+				if (level.isClientSide) {
+					if (entity instanceof Horse) {
+						Vec3 p = entity.getPosition(0);
+						Vec3 v = p.add(0, 0.5f, 0)
+								.add(VecHelper.offsetRandomly(Vec3.ZERO, level.random, 1)
+										.multiply(1, 0.2f, 1)
+										.normalize()
+										.scale(1f));
+						level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, v.x, v.y, v.z, 0, 0.1f, 0);
+						if (level.random.nextInt(3) == 0)
+							level.addParticle(ParticleTypes.LARGE_SMOKE, p.x, p.y + .5f, p.z,
+									(level.random.nextFloat() - .5f) * .5f, 0.1f, (level.random.nextFloat() - .5f) * .5f);
+					}
+					return;
+				}
+
+				if (entity instanceof LivingEntity livingEntity) {
+					livingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30, 0, false, false));
+					livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 1, false, false));
+				}
+				if (entity instanceof Horse horse) {
+					int progress = EntityHelper.getExtraCustomData(horse)
+							.getInt("CreateCorrupting");
+					if (progress < 100) {
+						if (progress % 10 == 0) {
+							level.playSound(null, entity.blockPosition(), SoundEvents.SOUL_ESCAPE, SoundSource.NEUTRAL,
+									1f, 1.5f * progress / 100f);
+						}
+						EntityHelper.getExtraCustomData(horse)
+								.putInt("CreateCorrupting", progress + 1);
+						return;
+					}
+
+					level.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXTINGUISH_FIRE,
+							SoundSource.NEUTRAL, 1.25f, 0.65f);
+
+					SkeletonHorse skeletonHorse = EntityType.SKELETON_HORSE.create(level);
+					CompoundTag serializeNBT = horse.saveWithoutId(new CompoundTag());
+					serializeNBT.remove("UUID");
+					if (!horse.getArmor()
+							.isEmpty())
+						horse.spawnAtLocation(horse.getArmor());
+
+					NBTSerializer.deserializeNBT(skeletonHorse, serializeNBT);
+					skeletonHorse.setPos(horse.getPosition(0));
+					level.addFreshEntity(skeletonHorse);
+					horse.discard();
+				}
+			}
+
+			@Override
+			public boolean canProcess(ItemStack stack, Level level) {
+				return isHauntable(stack, level);
+			}
+		},
+		SALTING {
+			@Override
+			public void spawnParticlesForProcessing(Level level, Vec3 pos) {
+				if (level.random.nextInt(8) != 0)
+					return;
+				pos = pos.add(VecHelper.offsetRandomly(Vec3.ZERO, level.random, 1)
+						.multiply(1, 0.05f, 1)
+						.normalize()
+						.scale(0.15f));
+				level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, pos.x, pos.y + .45f, pos.z, 0, 0, 0);
+				if (level.random.nextInt(2) == 0)
+					level.addParticle(ParticleTypes.SMOKE, pos.x, pos.y + .25f, pos.z, 0, 0, 0);
+			}
+
+			@Override
+			public void affectEntity(Entity entity, Level level) {
+				if (level.isClientSide) {
+					if (entity instanceof Horse) {
+						Vec3 p = entity.getPosition(0);
+						Vec3 v = p.add(0, 0.5f, 0)
+								.add(VecHelper.offsetRandomly(Vec3.ZERO, level.random, 1)
+										.multiply(1, 0.2f, 1)
+										.normalize()
+										.scale(1f));
+						level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, v.x, v.y, v.z, 0, 0.1f, 0);
+						if (level.random.nextInt(3) == 0)
+							level.addParticle(ParticleTypes.LARGE_SMOKE, p.x, p.y + .5f, p.z,
+									(level.random.nextFloat() - .5f) * .5f, 0.1f, (level.random.nextFloat() - .5f) * .5f);
+					}
+					return;
+				}
+
+				if (entity instanceof LivingEntity livingEntity) {
+					livingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30, 0, false, false));
+					livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 1, false, false));
+				}
+				if (entity instanceof Horse horse) {
+					int progress = EntityHelper.getExtraCustomData(horse)
+							.getInt("CreateSalting");
+					if (progress < 100) {
+						if (progress % 10 == 0) {
+							level.playSound(null, entity.blockPosition(), SoundEvents.SOUL_ESCAPE, SoundSource.NEUTRAL,
+									1f, 1.5f * progress / 100f);
+						}
+						EntityHelper.getExtraCustomData(horse)
+								.putInt("CreateSalting", progress + 1);
+						return;
+					}
+
+					level.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXTINGUISH_FIRE,
+							SoundSource.NEUTRAL, 1.25f, 0.65f);
+
+					SkeletonHorse skeletonHorse = EntityType.SKELETON_HORSE.create(level);
+					CompoundTag serializeNBT = horse.saveWithoutId(new CompoundTag());
+					serializeNBT.remove("UUID");
+					if (!horse.getArmor()
+							.isEmpty())
+						horse.spawnAtLocation(horse.getArmor());
+
+					NBTSerializer.deserializeNBT(skeletonHorse, serializeNBT);
+					skeletonHorse.setPos(horse.getPosition(0));
+					level.addFreshEntity(skeletonHorse);
+					horse.discard();
+				}
+			}
+
+			@Override
+			public boolean canProcess(ItemStack stack, Level level) {
+				return isHauntable(stack, level);
+			}
+		},
 		BLASTING {
 			@Override
 			public void spawnParticlesForProcessing(Level level, Vec3 pos) {
@@ -463,10 +902,20 @@ public class InWorldProcessing {
 
 		public static Type byBlock(BlockGetter reader, BlockPos pos) {
 			FluidState fluidState = reader.getFluidState(pos);
-			if (fluidState.getType() == Fluids.WATER || fluidState.getType() == Fluids.FLOWING_WATER)
-				return Type.SPLASHING;
 			BlockState blockState = reader.getBlockState(pos);
 			Block block = blockState.getBlock();
+			if (fluidState.getType() == AllFluids.ACID.get() || fluidState.getType() == AllFluids.ACID.get().getFlowing())
+				return Type.CORRUPTING;
+			if (fluidState.getType() == AllFluids.ENDERWATER.get() || fluidState.getType() == AllFluids.ENDERWATER.get().getFlowing())
+				return Type.TELEPORTING;
+			if (fluidState.getType() == AllFluids.ENDERLAVA.get() || fluidState.getType() == AllFluids.ENDERLAVA.get().getFlowing())
+				return Type.FREEZING;
+			if (fluidState.getType() == AllFluids.SALTWATER.get() || fluidState.getType() == AllFluids.SALTWATER.get().getFlowing())
+				return Type.SALTING;
+			if (fluidState.getType() == AllFluids.SOULLAVA.get() || fluidState.getType() == AllFluids.SOULLAVA.get().getFlowing())
+				return Type.BLAZING;
+			if (fluidState.getType() == AllFluids.SOULWATER.get() || fluidState.getType() == AllFluids.SOULWATER.get().getFlowing())
+				return Type.HAUNTING;
 			if (block == Blocks.SOUL_FIRE
 				|| block == Blocks.SOUL_CAMPFIRE && blockState.getOptionalValue(CampfireBlock.LIT)
 					.orElse(false)
@@ -486,6 +935,10 @@ public class InWorldProcessing {
 				return Type.SMOKING;
 			if (block == Blocks.LAVA || getHeatLevelOf(blockState).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
 				return Type.BLASTING;
+			if (fluidState.getType() == Fluids.WATER || fluidState.getType() == Fluids.FLOWING_WATER)
+				return Type.SPLASHING;
+			BlockState blockState = reader.getBlockState(pos);
+			Block block = blockState.getBlock();
 			return Type.NONE;
 		}
 	}
@@ -495,11 +948,34 @@ public class InWorldProcessing {
 			super(new ItemStackHandler(1));
 		}
 	}
-
 	public static class HauntingWrapper extends RecipeWrapper {
 		public HauntingWrapper() {
 			super(new ItemStackHandler(1));
 		}
 	}
-
+	public static class BlazingWrapper extends RecipeWrapper {
+		public BlazingWrapper() {
+			super(new ItemStackHandler(1));
+		}
+	}
+	public static class FreezingWrapper extends RecipeWrapper {
+		public FreezingWrapper() {
+			super(new ItemStackHandler(1));
+		}
+	}
+	public static class SaltingWrapper extends RecipeWrapper {
+		public SaltingWrapper() {
+			super(new ItemStackHandler(1));
+		}
+	}
+	public static class CorruptingWrapper extends RecipeWrapper {
+		public CorruptingWrapper() {
+			super(new ItemStackHandler(1));
+		}
+	}
+	public static class TeleportingWrapper extends RecipeWrapper {
+		public TeleportingWrapper() {
+			super(new ItemStackHandler(1));
+		}
+	}
 }

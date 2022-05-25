@@ -9,8 +9,13 @@ import com.simibubi.create.compat.rei.ConversionRecipe;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingRecipe;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
+import com.simibubi.create.content.contraptions.components.fan.BlazingRecipe;
+import com.simibubi.create.content.contraptions.components.fan.CorruptingRecipe;
+import com.simibubi.create.content.contraptions.components.fan.FreezingRecipe;
 import com.simibubi.create.content.contraptions.components.fan.HauntingRecipe;
+import com.simibubi.create.content.contraptions.components.fan.SaltingRecipe;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
+import com.simibubi.create.content.contraptions.components.fan.TeleportingRecipe;
 import com.simibubi.create.content.contraptions.components.millstone.MillingRecipe;
 import com.simibubi.create.content.contraptions.components.mixer.CompactingRecipe;
 import com.simibubi.create.content.contraptions.components.mixer.MixingRecipe;
@@ -31,6 +36,7 @@ import io.github.fabricators_of_create.porting_lib.util.ShapedRecipeUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -50,6 +56,11 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 	SANDPAPER_POLISHING(SandPaperPolishingRecipe::new),
 	SPLASHING(SplashingRecipe::new),
 	HAUNTING(HauntingRecipe::new),
+	TELEPORTING(TeleportingRecipe::new),
+	CORRUPTING(CorruptingRecipe::new),
+	SALTING(SaltingRecipe::new),
+	FREEZING(FreezingRecipe::new),
+	BLAZING(BlazingRecipe::new),
 	DEPLOYING(DeployerApplicationRecipe::new),
 	FILLING(FillingRecipe::new),
 	EMPTYING(EmptyingRecipe::new),

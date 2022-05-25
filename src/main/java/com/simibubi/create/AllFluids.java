@@ -142,7 +142,7 @@ public class AllFluids {
 	public static final FluidEntry<SimpleFlowableFluid.Flowing> ACID =
 			REGISTRATE.standardFluid("acid"/*, NoColorFluidAttributes::new*/)
 					.lang(f -> "fluid.create.acid", "Acid")
-					.tag(AllTags.forgeFluidTag("acid"))
+					.tag(AllTags.forgeFluidTag("acid")).attributes(b -> b.luminosity(5))
 //					.attributes(b -> b.viscosity(1500)
 //							.density(1400))
 					.properties(p -> p.levelDecreasePerBlock(2)
@@ -163,7 +163,7 @@ public class AllFluids {
 	public static final FluidEntry<SimpleFlowableFluid.Flowing> SOULLAVA =
 			REGISTRATE.standardFluid("soullava"/*, NoColorFluidAttributes::new*/)
 					.lang(f -> "fluid.create.soullava", "Soullava")
-					.tag(AllTags.forgeFluidTag("soullava"))
+					.tag(AllTags.forgeFluidTag("soullava")).attributes(b -> b.luminosity(15))
 //					.attributes(b -> b.viscosity(1500)
 //							.density(1400))
 					.properties(p -> p.levelDecreasePerBlock(2)
@@ -185,7 +185,7 @@ public class AllFluids {
 	public static final FluidEntry<SimpleFlowableFluid.Flowing> ENDERLAVA =
 			REGISTRATE.standardFluid("enderlava"/*, NoColorFluidAttributes::new*/)
 					.lang(f -> "fluid.create.enderlava", "Enderlava")
-					.tag(AllTags.forgeFluidTag("enderlava"))
+					.tag(AllTags.forgeFluidTag("enderlava")).attributes(b -> b.luminosity(15))
 //					.attributes(b -> b.viscosity(1500)
 //							.density(1400))
 					.properties(p -> p.levelDecreasePerBlock(2)

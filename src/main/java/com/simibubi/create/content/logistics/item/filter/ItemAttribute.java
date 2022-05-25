@@ -151,6 +151,11 @@ public interface ItemAttribute {
 		FURNACE_FUEL(AbstractFurnaceBlockEntity::isFuel),
 		WASHABLE(InWorldProcessing::isWashable),
 		HAUNTABLE(InWorldProcessing::isHauntable),
+		TELEPORTABLE(InWorldProcessing::isTeleportable), //ender water
+		CORRUPTABLE(InWorldProcessing::isCorruptable), // Acid
+		SALTABLE(InWorldProcessing::isSaltable), //conservation
+		FREEZABLE(InWorldProcessing::isFreezable), //Ender Lava
+		BLAZABLE(InWorldProcessing::isBlazable), //Soul Lava
 		CRUSHABLE((s, w) -> testRecipe(s, w, AllRecipeTypes.CRUSHING.getType())
 			|| testRecipe(s, w, AllRecipeTypes.MILLING.getType())),
 		SMELTABLE((s, w) -> testRecipe(s, w, RecipeType.SMELTING)),
