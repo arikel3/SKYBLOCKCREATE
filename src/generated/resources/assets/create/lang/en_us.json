@@ -2446,6 +2446,14 @@
 	"create.ponder.windmill_structure.header": "Windmill Contraptions",
 	"create.ponder.windmill_structure.text_1": "Any Structure can count as a valid Windmill, as long as it contains at least 8 sail-like Blocks.",
 
+  "block.create.enderwater": "Ender Water",
+  "block.create.soulwater": "Soul Water",
+  "block.create.mudwater": "Mud Water",
+  "block.create.saltwater": "Salt Water",
+  "block.create.soullava": "Soul Lava",
+  "block.create.enderlava": "Ender Lava",
+  "block.create.acid": "Acid",
+
 	"_": "Thank you for translating Create!"
 
 }

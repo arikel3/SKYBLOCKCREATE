@@ -37,6 +37,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -311,6 +312,12 @@ public class AllFluids {
 	@Nullable
 	public static BlockState getLavaInteraction(FluidState fluidState) {
 		Fluid fluid = fluidState.getType();
+		if (fluid.isSame(SOULWATER.get()))
+			return Blocks.NETHERRACK.defaultBlockState();
+		if (fluid.isSame(ENDERWATER.get()))
+			return Blocks.END_STONE.defaultBlockState();
+		if (fluid.isSame(MUDWATER.get()))
+			return Blocks.DIRT.defaultBlockState();
 		if (fluid.isSame(HONEY.get()))
 			return AllPaletteStoneTypes.LIMESTONE.getBaseBlock()
 				.get()
